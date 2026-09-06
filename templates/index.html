@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Street Vendor Digitalization Agent</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">🛒</span>
+        <div>
+          <div class="logo-title">Street Vendor Agent</div>
+          <div class="logo-sub">Powered by IBM watsonx</div>
+        </div>
+      </div>
+      <!-- Language Toggle -->
+      <div class="lang-toggle" role="group" aria-label="Language selector">
+        <button class="lang-btn active" data-lang="english" onclick="setLanguage('english')">EN</button>
+        <button class="lang-btn" data-lang="hindi" onclick="setLanguage('hindi')">हि</button>
+        <button class="lang-btn" data-lang="marathi" onclick="setLanguage('marathi')">म</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+
+    <!-- Tab Navigation -->
+    <nav class="tab-nav" role="tablist">
+      <button class="tab-btn active" role="tab" aria-selected="true" data-tab="chat" onclick="switchTab('chat')">
+        💬 Chat Assistant
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="profile" onclick="switchTab('profile')">
+        🪪 Digital Profile
+      </button>
+    </nav>
+
+    <!-- ===================== CHAT TAB ===================== -->
+    <section id="tab-chat" class="tab-panel active" role="tabpanel">
+      <div class="section-header">
+        <h2>Your Digital Business Advisor</h2>
+        <p>Ask anything — schemes, UPI setup, pricing, marketing, and more.</p>
+      </div>
+
+      <!-- Quick Action Chips -->
+      <div class="quick-chips" aria-label="Quick questions">
+        <button class="chip" onclick="sendQuickMessage('I sell fruit in Pune Camp area. Help me go digital.')">🍉 Fruit in Pune Camp</button>
+        <button class="chip" onclick="sendQuickMessage('How do I set up UPI QR code for my stall?')">📱 Set Up UPI QR</button>
+        <button class="chip" onclick="sendQuickMessage('Tell me about PM SVANidhi loan scheme for street vendors.')">🏛 PM SVANidhi Scheme</button>
+        <button class="chip" onclick="sendQuickMessage('How do I price my vada pav and street food for profit?')">🥙 Food Pricing Tips</button>
+        <button class="chip" onclick="sendQuickMessage('How to list my stall on Google Maps?')">🗺 Google Maps Listing</button>
+        <button class="chip" onclick="sendQuickMessage('What is Mudra loan and how do I apply?')">💰 Mudra Loan</button>
+      </div>
+
+      <!-- Chat Window -->
+      <div class="chat-window" id="chatWindow" aria-live="polite" aria-label="Chat messages">
+        <div class="chat-message bot">
+          <div class="avatar">🤖</div>
+          <div class="bubble">
+            Namaste! 🙏 I'm your digital business advisor. I help street vendors and hawkers get online, access government schemes, set up UPI payments, and grow their business.<br><br>
+            <strong>Ask me anything or click a quick question above to get started!</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input Area -->
+      <div class="chat-input-area">
+        <div class="input-row">
+          <textarea
+            id="chatInput"
+            class="chat-textarea"
+            placeholder="Type your question... e.g. I sell vegetables near Dadar station"
+            rows="2"
+            aria-label="Your message"
+            onkeydown="handleChatKey(event)"
+          ></textarea>
+          <button class="send-btn" id="sendBtn" onclick="sendMessage()" aria-label="Send message">
+            <span>➤</span>
+          </button>
+        </div>
+        <div class="voice-hint">🎤 Voice input: Use your phone keyboard's microphone button</div>
+      </div>
+    </section>
+
+    <!-- ===================== PROFILE TAB ===================== -->
+    <section id="tab-profile" class="tab-panel" role="tabpanel">
+      <div class="section-header">
+        <h2>Generate Your Digital Business Card</h2>
+        <p>Fill in your details and get a ready-to-share digital flyer and WhatsApp bio.</p>
+      </div>
+
+      <form class="profile-form" id="profileForm" onsubmit="generateProfile(event)">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="businessName">🏪 Shop / Business Name <span class="required">*</span></label>
+            <input type="text" id="businessName" placeholder="e.g. Ramu Bhai Fresh Fruits" required />
+          </div>
+          <div class="form-group">
+            <label for="ownerName">👤 Owner Name</label>
+            <input type="text" id="ownerName" placeholder="e.g. Ramesh Kumar" />
+          </div>
+          <div class="form-group">
+            <label for="location">📍 Location / Area <span class="required">*</span></label>
+            <input type="text" id="location" placeholder="e.g. Camp, Pune or Dadar, Mumbai" required />
+          </div>
+          <div class="form-group">
+            <label for="itemType">🛍 What Do You Sell? <span class="required">*</span></label>
+            <input type="text" id="itemType" placeholder="e.g. Fresh fruits, seasonal vegetables" required />
+          </div>
+          <div class="form-group">
+            <label for="upiId">💳 UPI ID (optional)</label>
+            <input type="text" id="upiId" placeholder="e.g. ramesh@upi" />
+          </div>
+        </div>
+
+        <button type="submit" class="generate-btn" id="generateBtn">
+          <span id="generateBtnText">✨ Generate My Digital Card</span>
+          <span id="generateSpinner" class="spinner hidden"></span>
+        </button>
+      </form>
+
+      <!-- Profile Output -->
+      <div id="profileOutput" class="profile-output hidden">
+        <div class="profile-output-header">
+          <h3>🎉 Your Digital Business Profile</h3>
+          <button class="copy-btn" onclick="copyProfile()" aria-label="Copy profile text">📋 Copy</button>
+        </div>
+        <div id="profileContent" class="profile-content"></div>
+        <div class="profile-actions">
+          <button class="action-btn" onclick="shareProfile()">📲 Share via WhatsApp</button>
+          <button class="action-btn outline" onclick="resetProfile()">🔄 Create Another</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Made with ❤️ for India's Micro-Entrepreneurs &nbsp;|&nbsp; Powered by IBM watsonx Granite</p>
+  </footer>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
